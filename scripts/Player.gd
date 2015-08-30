@@ -36,7 +36,7 @@ func _fixed_process(delta):
 		projectile.set_pos(get_pos() + nose_norm*64)
 		projectile.set_rot(get_rot())
 		projectile.apply_impulse(vec2(0,0),nose_norm*projectile_speed)
-		get_node("/root/Weltraum").add_child(projectile)
+		get_node("/root/Space").add_child(projectile)
 		cooldown_shoot = cooldown_shoot_default
 		
 		
@@ -56,6 +56,6 @@ func damage(amount):
 	if (hitpoints <= 0):
 		var explosion = pl_explosion.instance()
 		explosion.set_pos(get_pos())
-		get_node("/root/Weltraum").add_child(explosion)
+		get_node("/root/Space").add_child(explosion)
 		explosion = null
 		self.queue_free()
