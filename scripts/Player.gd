@@ -1,6 +1,8 @@
 
 extends RigidBody2D
 
+export var player_controlled = false
+
 var nose_norm = vec2(0,0)
 var thrust = 1.2
 var pl_projectile = preload("res://projectile.scn")
@@ -21,23 +23,24 @@ func _fixed_process(delta):
 	
 	nose_norm = vec2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
 	
-	if (Input.is_action_pressed(get_name() + "_Up")):
-		apply_impulse(vec2(0,0),nose_norm*thrust)
-		get_node("ThrustParticles").set_param(Particles2D.PARAM_DIRECTION ,get_rot())
-		get_node("ThrustParticles").set_emitting(true)
-		
-	if (Input.is_action_pressed(get_name() + "_Left")):
-		set_rot(get_rot()+.03)
-	if (Input.is_action_pressed(get_name() + "_Right")):
-		set_rot(get_rot()-.03)
-		
-	if (Input.is_action_pressed(get_name() + "_Fire") && cooldown_shoot <= 0):
-		projectile = pl_projectile.instance()
-		projectile.set_pos(get_pos() + nose_norm*64)
-		projectile.set_rot(get_rot())
-		projectile.apply_impulse(vec2(0,0),nose_norm*projectile_speed)
-		get_node("/root/Space").add_child(projectile)
-		cooldown_shoot = cooldown_shoot_default
+	if (player_controlled):
+		if (Input.is_action_pressed(get_name() + "_Up")):
+			apply_impulse(vec2(0,0),nose_norm*thrust)
+			get_node("ThrustParticles").set_param(Particles2D.PARAM_DIRECTION ,get_rot())
+			get_node("ThrustParticles").set_emitting(true)
+			
+		if (Input.is_action_pressed(get_name() + "_Left")):
+			set_rot(get_rot()+.03)
+		if (Input.is_action_pressed(get_name() + "_Right")):
+			set_rot(get_rot()-.03)
+			
+		if (Input.is_action_pressed(get_name() + "_Fire") && cooldown_shoot <= 0):
+			projectile = pl_projectile.instance()
+			projectile.set_pos(get_pos() + nose_norm*64)
+			projectile.set_rot(get_rot())
+			projectile.apply_impulse(vec2(0,0),nose_norm*projectile_speed)
+			get_node("/root/Space").add_child(projectile)
+			cooldown_shoot = cooldown_shoot_default
 		
 		
 	#Falls der Spieler den Bildschirm verlässt soll er auf der gegenüberliegendenden Seite erscheinen
