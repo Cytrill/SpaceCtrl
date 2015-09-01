@@ -1,2 +1,4 @@
 # SpaceCtrl
-Cytrill Spaceshooter
+Massive Multiplayer Offline Spaceshooter :)
+
+![alt tag](/screenshot.jpg)
