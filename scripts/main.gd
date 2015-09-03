@@ -3,7 +3,7 @@ extends Node2D
 
 var time_elapsed = 0
 
-var game_time = 10 #In Seconds
+var game_time = 60 #In Seconds
 var timeout_time = 2 #In Seconds
 var time_remaining = game_time
 
@@ -16,6 +16,8 @@ var fight_dialog_time = 2 #In Seconds
 var pl_player = preload("res://PlayerShip.scn")
 
 var texture_count = 6 #the amount of individual Ship-Textures
+
+var highscore = {}
 
 func _ready():
 	set_fixed_process(true)
@@ -56,10 +58,20 @@ func state_running(delta):
 func state_timeup(delta):
 	if (game_state_prev != "timeup"):
 		time_elapsed = 0 #Reset Timer
-			#Remove all Players
+		
+		#Display Highscore
+		var str_highscore = "HIGHSCORE:\n"
+		
+		for p in highscore:
+			str_highscore += p + ": "  + str(highscore[p])+"\n"
+			
+		get_node("GUIJoinGame/LHighscore").set_text(str_highscore)	
+			
+		
+		#Remove all Players
 		for player in get_node("Players").get_children():
 			player.queue_free()
-			
+		
 	#Start countdown after two Players have joined the game:
 	if (get_node("Players").get_child_count() > 1):
 		time_remaining = timeout_time - time_elapsed
@@ -68,6 +80,7 @@ func state_timeup(delta):
 	
 	if (time_remaining <= 0):
 		get_node("GUIJoinGame").hide()
+		highscore = {} #Reset Highscore
 		game_state_next = "running"
 	else:
 		var m = floor(time_remaining / 60)
@@ -88,6 +101,7 @@ func state_timeup(delta):
 				print("Player " + str(i) + " has joined the game!")
 				var player = pl_player.instance()
 				player.set_name("Player"+str(i))
+				highscore[player.get_name()] = 0 #Init Playerscore
 				var texture_index = i
 				
 				if (texture_index > texture_count):
