@@ -26,16 +26,17 @@ func _ready():
 func _fixed_process(delta):
 	if (cooldown_shoot > 0):
 		cooldown_shoot -= delta
-	if (cooldown_invincible > 0):
+	if (cooldown_invincible >= 0):
 		cooldown_invincible -= delta
+	else:
+		cooldown_invincible = 0
 
 	if (cooldown_invincible > 0):
 		set_collision_mask_bit( 0, false )
 		get_node("Sprite").set_opacity(0.5+0.5*sin(cooldown_invincible*15))
-		print(get_node("Sprite").get_opacity())
 	else:
 		set_collision_mask_bit( 0, true )
-		set_opacity(1)
+		get_node("Sprite").set_opacity(1)
 		
 	nose_norm = vec2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
 	
