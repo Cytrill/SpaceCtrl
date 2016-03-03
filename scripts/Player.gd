@@ -4,7 +4,7 @@ extends RigidBody2D
 export var player_controlled = false
 export var score = 0
 
-var nose_norm = vec2(0,0)
+var nose_norm = Vector2(0,0)
 var thrust = 1.2
 var pl_projectile = preload("res://projectile.scn")
 var pl_explosion = preload("res://explosion.scn")
@@ -38,11 +38,11 @@ func _fixed_process(delta):
 		set_collision_mask_bit( 0, true )
 		get_node("Sprite").set_opacity(1)
 		
-	nose_norm = vec2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
+	nose_norm = Vector2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
 	
 	if (player_controlled):
 		if (Input.is_action_pressed(get_name() + "_Up")):
-			apply_impulse(vec2(0,0),nose_norm*thrust)
+			apply_impulse(Vector2(0,0),nose_norm*thrust)
 			get_node("ThrustParticles").set_param(Particles2D.PARAM_DIRECTION ,get_rot())
 			get_node("ThrustParticles").set_emitting(true)
 			
@@ -56,20 +56,20 @@ func _fixed_process(delta):
 			projectile.set_pos(get_pos() + nose_norm*64)
 			projectile.set_rot(get_rot())
 			projectile.player = self
-			projectile.apply_impulse(vec2(0,0),nose_norm*projectile_speed)
+			projectile.apply_impulse(Vector2(0,0),nose_norm*projectile_speed)
 			get_node("/root/Space").add_child(projectile)
 			cooldown_shoot = cooldown_shoot_default
 		
-		
+	
 	#Falls der Spieler den Bildschirm verlässt soll er auf der gegenüberliegendenden Seite erscheinen
 	if (get_pos().x > 1920):
-		set_pos(vec2(0,get_pos().y))
+		set_pos(vector2d(0,get_pos().y))
 	if (get_pos().x < 0):
-		set_pos(vec2(1920,get_pos().y))
+		set_pos(Vector2(1920,get_pos().y))
 	if (get_pos().y < 0):
-		set_pos(vec2(get_pos().x, 1080))
+		set_pos(Vector2(get_pos().x, 1080))
 	if (get_pos().y > 1080):
-		set_pos(vec2(get_pos().x, 0))
+		set_pos(Vector2(get_pos().x, 0))
 		
 func damage(amount):
 	get_node("ExplosionParticles").set_emitting(true)
@@ -79,7 +79,7 @@ func damage(amount):
 		explosion.set_pos(get_pos())
 		get_node("/root/Space").add_child(explosion)
 		explosion = null
-		#set_pos(vec2(randf()*get_viewport_rect().size.x,randf()*get_viewport_rect().size.y))
+		#set_pos(Vector2(randf()*get_viewport_rect().size.x,randf()*get_viewport_rect().size.y))
 		hitpoints = hitpoints_max
 		# invincible for a few seconds..
 		cooldown_invincible = cooldown_invincible_default
