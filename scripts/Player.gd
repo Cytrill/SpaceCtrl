@@ -3,6 +3,7 @@ extends RigidBody2D
 
 export var player_controlled = false
 export var score = 0
+var player_number = 0
 
 var nose_norm = Vector2(0,0)
 var thrust = 1.2
@@ -19,6 +20,9 @@ var hitpoints_max = 1
 var invincible = false
 var cooldown_invincible = 0
 var cooldown_invincible_default = 2
+
+var joy_tresh = 0.2
+
 
 func _ready():
 	set_fixed_process(true)
@@ -41,17 +45,17 @@ func _fixed_process(delta):
 	nose_norm = Vector2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
 	
 	if (player_controlled):
-		if (Input.is_action_pressed(get_name() + "_Up")):
+		if Input.get_joy_axis(player_number,  1) < -joy_tresh:
 			apply_impulse(Vector2(0,0),nose_norm*thrust)
 			get_node("ThrustParticles").set_param(Particles2D.PARAM_DIRECTION ,get_rot())
 			get_node("ThrustParticles").set_emitting(true)
 			
-		if (Input.is_action_pressed(get_name() + "_Left")):
+		if Input.get_joy_axis(player_number,  0) < -joy_tresh:
 			set_rot(get_rot()+.03)
-		if (Input.is_action_pressed(get_name() + "_Right")):
+		if Input.get_joy_axis(player_number,  0) > joy_tresh:
 			set_rot(get_rot()-.03)
 			
-		if (Input.is_action_pressed(get_name() + "_Fire") && cooldown_shoot+cooldown_invincible <= 0):
+		if (player_controlled && Input.is_joy_button_pressed(player_number,  1) && cooldown_shoot+cooldown_invincible <= 0):
 			projectile = pl_projectile.instance()
 			projectile.set_pos(get_pos() + nose_norm*64)
 			projectile.set_rot(get_rot())
@@ -63,7 +67,7 @@ func _fixed_process(delta):
 	
 	#Falls der Spieler den Bildschirm verlässt soll er auf der gegenüberliegendenden Seite erscheinen
 	if (get_pos().x > 1920):
-		set_pos(vector2d(0,get_pos().y))
+		set_pos(Vector2(0,get_pos().y))
 	if (get_pos().x < 0):
 		set_pos(Vector2(1920,get_pos().y))
 	if (get_pos().y < 0):

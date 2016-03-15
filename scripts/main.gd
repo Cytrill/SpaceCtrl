@@ -11,13 +11,18 @@ var game_state_prev = ""
 var game_state = ""
 var game_state_next = "timeup"
 
-var fight_dialog_time = 2 #In Seconds
+var fight_dialog_time = 3 #In Seconds
 
 var pl_player = preload("res://PlayerShip.scn")
 
 var texture_count = 6 #the amount of individual Ship-Textures
 
 var highscore = {}
+
+#Player Colors
+const colarray = [Color(0, 0, 1), Color(0, 1, 0), Color(0, 1, 1),
+	Color(1, 0, 0), Color(1, 0, 1), Color(1, 1, 0), Color(1, 1, 1), Color(1, 0, 0)]
+
 
 func _ready():
 	set_fixed_process(true)
@@ -93,27 +98,32 @@ func state_timeup(delta):
 		#show Join-GUI
 		get_node("GUIJoinGame").show()
 		
-	#Check if a Player wants to join the game:
-	for i in range(1,99):
-		if (Input.is_action_pressed("Player"+ str(i) + "_Fire")):
+
+	for i in range(0,128):
+		if Input.is_joy_button_pressed(i, 0):
 			if (!get_node("Players").has_node("Player"+str(i))):
+				print("Button has been presed!")
 				#Reset countdown after two Players have joined the game:
 				if (get_node("Players").get_child_count() == 1):
 					time_elapsed = 0 #Reset Timer
+				
 				print("Player " + str(i) + " has joined the game!")
 				var player = pl_player.instance()
 				player.set_name("Player"+str(i))
+				player.player_number = i
 				highscore["Player"+str(i)] = 0 #Init Playerscore
-				var texture_index = i
+				var texture_index = (i+1)
 				
 				if (texture_index > texture_count):
 					 texture_index = (i % texture_count)+1
-				var t = load("res://gfx/Player" + str(i) + ".png")
+				var t = load("res://gfx/Player" + str(texture_index) + ".png")
 				player.add_to_group("Ships")
 				var color = Color(1,1,1)
 				color.s = 1
 				color.h = i*0.05 #Change Hue using player index
-				player.get_node("Sprite").set_modulate(color)
+				leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
+				leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
+				player.get_node("Sprite").set_modulate(colarray[i%8])
 				player.get_node("Sprite").set_texture(t)
 				get_node("Players").add_child(player)
 			
