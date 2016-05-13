@@ -7,7 +7,7 @@ func set_led(js, led, red, green, blue, brightness):
 	data.push_back(red)
 	data.push_back(green)
 	data.push_back(blue)
-	data.push_back(green)
+	data.push_back(brightness)
 	data.push_back(0x20 + led)
 
 	var udp = PacketPeerUDP.new()
