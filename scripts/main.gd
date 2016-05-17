@@ -4,7 +4,7 @@ extends Node2D
 var time_elapsed = 0
 
 var game_time = 120 #In Seconds
-var timeout_time = 2 #In Seconds
+var timeout_time = 20 #In Seconds
 var time_remaining = game_time
 
 var game_state_prev = ""
@@ -101,17 +101,17 @@ func state_timeup(delta):
 
 	for i in range(0,128):
 		if Input.is_joy_button_pressed(i, 0):
-			if (!get_node("Players").has_node("Player"+str(i))):
+			if (!get_node("Players").has_node(cytrill.get_name(i))):
 				print("Button has been presed!")
 				#Reset countdown after two Players have joined the game:
 				if (get_node("Players").get_child_count() == 1):
 					time_elapsed = 0 #Reset Timer
 				
-				print("Player " + str(i) + " has joined the game!")
+				print(cytrill.get_name(i)+ " has joined the game!")
 				var player = pl_player.instance()
-				player.set_name("Player"+str(i))
+				player.set_name(cytrill.get_name(i))
 				player.player_number = i
-				highscore["Player"+str(i)] = 0 #Init Playerscore
+				highscore[cytrill.get_name(i)] = 0 #Init Playerscore
 				var texture_index = (i+1)
 				
 				if (texture_index > texture_count):
@@ -121,8 +121,8 @@ func state_timeup(delta):
 				var color = Color(1,1,1)
 				color.s = 1
 				color.h = i*0.05 #Change Hue using player index
-				leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
-				leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
+				cytrill.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
+				cytrill.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
 				player.get_node("Sprite").set_modulate(colarray[i%8])
 				player.get_node("Sprite").set_texture(t)
 				get_node("Players").add_child(player)
