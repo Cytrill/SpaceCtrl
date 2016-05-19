@@ -13,7 +13,7 @@ var pl_explosion = preload("res://explosion.scn")
 var projectile = null
 var projectile_speed = 400
 var cooldown_shoot = 0
-var cooldown_shoot_default = .2
+var cooldown_shoot_default = .8
 var hitpoints = 1
 var hitpoints_max = 1
 
