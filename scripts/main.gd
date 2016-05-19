@@ -124,7 +124,7 @@ func state_timeup(delta):
 				color.h = i*0.05 #Change Hue using player index
 				cytrill.set_led(i, 0, colarray[i%10].r*255, colarray[i%10].g*255, colarray[i%10].b*255, 2)
 				cytrill.set_led(i, 1, colarray[i%10].r*255, colarray[i%10].g*255, colarray[i%10].b*255, 2)
-				player.get_node("Sprite").set_modulate(colarray[i%8])
+				player.get_node("Sprite").set_modulate(colarray[i%10])
 				player.get_node("Sprite").set_texture(t)
 				get_node("Players").add_child(player)
 			
