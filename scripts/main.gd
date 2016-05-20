@@ -19,6 +19,9 @@ var texture_count = 6 #the amount of individual Ship-Textures
 
 var highscore = {}
 
+var game_over_time = 10
+var time_game_over = 0
+
 #Player Colors
 const colarray = [Color(0, 0, 1), Color(0, 1, 0), Color(0, 1, 1),
 	Color(1, 0, 0), Color(1, 0, 1), Color(1, 1, 0), Color(1, 1, 1), 
